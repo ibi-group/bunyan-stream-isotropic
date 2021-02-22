@@ -4,15 +4,15 @@
     "dependencies": {
         "bunyan": "~1.8.15",
         "chalk": "~4.1.0",
-        "isotropic-console": "~0.1.0",
-        "isotropic-value-to-source": "~0.7.0",
+        "isotropic-console": "~0.2.0",
+        "isotropic-value-to-source": "~0.8.0",
         "moment-timezone": "~0.5.33"
     },
     "description": "Bunyan stream for isotropic console output",
     "devDependencies": {
-        "isotropic-dev-dependencies": "0.0.0",
-        "isotropic-error": "~0.11.0",
-        "isotropic-logger": "~0.1.0",
+        "isotropic-dev-dependencies": "~0.1.0",
+        "isotropic-error": "~0.12.0",
+        "isotropic-logger": "~0.2.0",
         "test-console": "~1.1.0"
     },
     "engines": {
@@ -41,5 +41,5 @@
         "pretest": "npm run lint",
         "test": "cross-env BABEL_ENV=test nyc --nycrc-path ./node_modules/isotropic-dev-dependencies/config/nyc.json mocha"
     },
-    "version": "0.1.0"
+    "version": "0.2.0"
 }
