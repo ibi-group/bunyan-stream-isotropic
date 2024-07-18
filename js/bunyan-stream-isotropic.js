@@ -64,9 +64,7 @@ export default {
                     details[key] = record[key];
                     break;
             }
-
-            return details;
-        }, []);
+        });
 
         if (Object.keys(details).length) {
             args.push(_valueToSource(details));
