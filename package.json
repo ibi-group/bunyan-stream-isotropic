@@ -3,7 +3,7 @@
     "bugs": "https://github.com/ibi-group/bunyan-stream-isotropic/issues",
     "dependencies": {
         "bunyan": "~1.8.15",
-        "chalk": "~4.1.0",
+        "chalk": "~5.3.0",
         "isotropic-console": "~0.2.0",
         "isotropic-value-to-source": "~0.8.0",
         "moment-timezone": "~0.5.45"
@@ -16,7 +16,7 @@
         "test-console": "~2.0.0"
     },
     "engines": {
-        "node": "^22.5.0",
+        "node": "^22.5.1",
         "npm": "^10.8.2"
     },
     "files": [
