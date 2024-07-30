@@ -41,13 +41,13 @@ _mocha.describe('bunyan-stream-isotropic', () => {
 
             endTime = _moment(),
             regularExpressions = [
-                /^\[(.*?)\] \u001b\[37mTRACE\u001b\[39m: \u001b\[1mThis should be a formatted trace message\u001b\[22m\n$/u,
-                /^\[(.*?)\] \u001b\[33mDEBUG\u001b\[39m: \u001b\[1mThis should be a formatted debug message\u001b\[22m\n$/u,
-                /^\[(.*?)\] \u001b\[36mINFO\u001b\[39m: \u001b\[1mThis should be a formatted info message\u001b\[22m\n$/u,
-                /^\[(.*?)\] \u001b\[35mWARN\u001b\[39m: \u001b\[1mThis should be a formatted warn message\u001b\[22m\n$/u,
-                /^\[(.*?)\] \u001b\[31mERROR\u001b\[39m: \u001b\[1mThis should be a formatted error message\u001b\[22m\n$/u,
-                /^\[(.*?)\] \u001b\[7mFATAL\u001b\[27m: \u001b\[1mThis should be a formatted fatal message\u001b\[22m\n$/u,
-                /^\[(.*?)\] \u001b\[1mLVL 100\u001b\[22m: \u001b\[1mThis should be a formatted custom message\u001b\[22m\n$/u
+                /^\[(.*?)\] \u{1b}\[37mTRACE\u{1b}\[39m: \u{1b}\[1mThis should be a formatted trace message\u{1b}\[22m\n$/v,
+                /^\[(.*?)\] \u{1b}\[33mDEBUG\u{1b}\[39m: \u{1b}\[1mThis should be a formatted debug message\u{1b}\[22m\n$/v,
+                /^\[(.*?)\] \u{1b}\[36mINFO\u{1b}\[39m: \u{1b}\[1mThis should be a formatted info message\u{1b}\[22m\n$/v,
+                /^\[(.*?)\] \u{1b}\[35mWARN\u{1b}\[39m: \u{1b}\[1mThis should be a formatted warn message\u{1b}\[22m\n$/v,
+                /^\[(.*?)\] \u{1b}\[31mERROR\u{1b}\[39m: \u{1b}\[1mThis should be a formatted error message\u{1b}\[22m\n$/v,
+                /^\[(.*?)\] \u{1b}\[7mFATAL\u{1b}\[27m: \u{1b}\[1mThis should be a formatted fatal message\u{1b}\[22m\n$/v,
+                /^\[(.*?)\] \u{1b}\[1mLVL 100\u{1b}\[22m: \u{1b}\[1mThis should be a formatted custom message\u{1b}\[22m\n$/v
             ];
 
         _chai.expect(output).to.be.an('array');
@@ -90,7 +90,7 @@ _mocha.describe('bunyan-stream-isotropic', () => {
         _chai.expect(output[0]).to.be.an('string');
 
         {
-            const match = output[0].match(/^\[(.*?)\] \u001b\[36mINFO\u001b\[39m: \u001b\[1mThis should be a formatted info message with data fields\u001b\[22m \{\n {4}a: 'a',\n {4}b: 'b',\n {4}c: 'c'\n\}\n$/u);
+            const match = output[0].match(/^\[(.*?)\] \u{1b}\[36mINFO\u{1b}\[39m: \u{1b}\[1mThis should be a formatted info message with data fields\u{1b}\[22m \{\n {4}a: 'a',\n {4}b: 'b',\n {4}c: 'c'\n\}\n$/v);
 
             _chai.expect(match).to.be.an('array');
         }
@@ -115,7 +115,7 @@ _mocha.describe('bunyan-stream-isotropic', () => {
         _chai.expect(output[0]).to.be.an('string');
 
         {
-            const match = output[0].match(/^\[(.*?)\] \u001b\[31mERROR\u001b\[39m: \u001b\[1mThis should be a formatted error message with an error stack\u001b\[22m \{\n {4}error: \{\n {8}details: \{\n {12}a: 'a',\n {12}b: 'b',\n {12}c: 'c'\n {8}\},\n {8}message: 'Example error'\n {4}\}\n\}\n$/u);
+            const match = output[0].match(/^\[(.*?)\] \u{1b}\[31mERROR\u{1b}\[39m: \u{1b}\[1mThis should be a formatted error message with an error stack\u{1b}\[22m \{\n {4}error: \{\n {8}details: \{\n {12}a: 'a',\n {12}b: 'b',\n {12}c: 'c'\n {8}\},\n {8}message: 'Example error'\n {4}\}\n\}\n$/v);
 
             _chai.expect(match).to.be.an('array');
         }
@@ -137,7 +137,7 @@ _mocha.describe('bunyan-stream-isotropic', () => {
             _chai.expect(output[0]).to.be.an('string');
 
             {
-                const match = output[0].match(/^\[(.*?)\] \u001b\[31mERROR\u001b\[39m: \u001b\[1mThis should be a formatted error message without an error stack\u001b\[22m\n$/u);
+                const match = output[0].match(/^\[(.*?)\] \u{1b}\[31mERROR\u{1b}\[39m: \u{1b}\[1mThis should be a formatted error message without an error stack\u{1b}\[22m\n$/v);
 
                 _chai.expect(match).to.be.an('array');
             }
@@ -155,7 +155,7 @@ _mocha.describe('bunyan-stream-isotropic', () => {
             _chai.expect(output[0]).to.be.an('string');
 
             {
-                const match = output[0].match(/^\[(.*?)\] \u001b\[31mERROR\u001b\[39m: \u001b\[1mThis should be a formatted error message without an error stack\u001b\[22m \{\n {4}error: \{\}\n\}\n$/u);
+                const match = output[0].match(/^\[(.*?)\] \u{1b}\[31mERROR\u{1b}\[39m: \u{1b}\[1mThis should be a formatted error message without an error stack\u{1b}\[22m \{\n {4}error: \{\}\n\}\n$/v);
 
                 _chai.expect(match).to.be.an('array');
             }
@@ -179,7 +179,7 @@ _mocha.describe('bunyan-stream-isotropic', () => {
             _chai.expect(output[0]).to.be.an('string');
 
             {
-                const match = output[0].match(/^\[(.*?)\] \u001b\[31mERROR\u001b\[39m: \u001b\[1mThis should be a formatted error message with a custom error stack\u001b\[22m \{\n {4}error: \{\}\n\}\n$/u);
+                const match = output[0].match(/^\[(.*?)\] \u{1b}\[31mERROR\u{1b}\[39m: \u{1b}\[1mThis should be a formatted error message with a custom error stack\u{1b}\[22m \{\n {4}error: \{\}\n\}\n$/v);
 
                 _chai.expect(match).to.be.an('array');
             }
@@ -206,7 +206,7 @@ _mocha.describe('bunyan-stream-isotropic', () => {
                 _chai.expect(output[0]).to.be.an('string');
 
                 {
-                    const match = output[0].match(/^\[(.*?)\] \u001b\[31mERROR\u001b\[39m: \u001b\[1mThis should be a formatted error message with a custom error stack\u001b\[22m \{\n {4}error: \{\}\n\}\n$/u);
+                    const match = output[0].match(/^\[(.*?)\] \u{1b}\[31mERROR\u{1b}\[39m: \u{1b}\[1mThis should be a formatted error message with a custom error stack\u{1b}\[22m \{\n {4}error: \{\}\n\}\n$/v);
 
                     _chai.expect(match).to.be.an('array');
                 }
