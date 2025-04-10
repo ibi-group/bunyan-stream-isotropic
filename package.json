@@ -10,6 +10,7 @@
     },
     "description": "Bunyan stream for isotropic console output",
     "devDependencies": {
+        "eslint": "~9.8.0",
         "isotropic-dev-dependencies": "~0.3.0",
         "isotropic-error": "~0.13.0",
         "isotropic-logger": "~0.3.0",
