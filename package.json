@@ -13,7 +13,7 @@
         "eslint": "~9.8.0",
         "isotropic-dev-dependencies": "~0.3.1",
         "isotropic-error": "~0.13.1",
-        "isotropic-logger": "~0.3.1",
+        "isotropic-logger": "~0.4.0",
         "test-console": "~2.0.0"
     },
     "engines": {
@@ -42,5 +42,5 @@
         "test": "cross-env BABEL_ENV=test c8 -c ./node_modules/isotropic-dev-dependencies/config/c8.json mocha --import=isotropic-dev-dependencies/lib/register-babel-loader.js"
     },
     "type": "module",
-    "version": "0.3.1"
+    "version": "0.4.0"
 }
