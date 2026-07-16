@@ -1,45 +1,42 @@
 {
     "author": "Steven Olmsted <steven.olmsted@ibigroup.com>",
-    "bugs": "https://github.com/ibi-group/bunyan-stream-isotropic/issues",
+    "bugs": "https://github.com/ibi-group/isotropic-logger-pretty/issues",
     "dependencies": {
-        "bunyan": "~1.8.15",
-        "chalk": "~5.3.0",
         "isotropic-console": "~0.3.1",
-        "isotropic-value-to-source": "~0.9.1",
-        "moment-timezone": "~0.5.45"
+        "isotropic-make": "~0.13.1",
+        "isotropic-value-to-source": "~0.9.1"
     },
-    "description": "Bunyan stream for isotropic console output",
+    "description": "Human-readable pretty-printer for isotropic-logger console output",
     "devDependencies": {
-        "eslint": "~9.8.0",
         "isotropic-dev-dependencies": "~0.3.1",
-        "isotropic-error": "~0.13.1",
-        "isotropic-logger": "~0.4.0",
         "test-console": "~2.0.0"
     },
     "engines": {
-        "node": "^22.5.1",
-        "npm": "^10.8.2"
+        "node": "^26.5.0",
+        "npm": "^11.17.0"
     },
     "files": [
         "lib"
     ],
-    "homepage": "https://github.com/ibi-group/bunyan-stream-isotropic",
+    "homepage": "https://github.com/ibi-group/isotropic-logger-pretty",
     "keywords": [
-        "isotropic"
+        "isotropic",
+        "isotropic-logger",
+        "log-formatter",
+        "pino",
+        "pretty-print"
     ],
     "license": "BSD-3-Clause",
-    "main": "lib/bunyan-stream-isotropic.js",
-    "name": "bunyan-stream-isotropic",
-    "repository": "github:ibi-group/bunyan-stream-isotropic",
+    "main": "lib/logger-pretty.js",
+    "name": "isotropic-logger-pretty",
+    "repository": "github:ibi-group/isotropic-logger-pretty",
     "scripts": {
-        "build": "cross-env BABEL_ENV=node-minify babel --config-file ./node_modules/isotropic-dev-dependencies/config/babel.json js -d lib --delete-dir-on-start",
-        "lint": "eslint js test",
-        "postprepare": "node ./node_modules/isotropic-dev-dependencies/lib/install-git-hooks.js",
-        "posttest": "[ -z \"$npm_config_coverage\" ] || c8 -c ./node_modules/isotropic-dev-dependencies/config/c8.json check-coverage",
-        "prepare": "npm run build",
-        "prepublishOnly": "npm test --coverage",
+        "lint": "eslint eslint.config.js lib test",
+        "posttest": "c8 -c ./node_modules/isotropic-dev-dependencies/config/c8.json check-coverage",
+        "prepare": "node ./node_modules/isotropic-dev-dependencies/lib/install-git-hooks.js",
+        "prepublishOnly": "npm test",
         "pretest": "npm run lint",
-        "test": "cross-env BABEL_ENV=test c8 -c ./node_modules/isotropic-dev-dependencies/config/c8.json mocha --import=isotropic-dev-dependencies/lib/register-babel-loader.js"
+        "test": "c8 -c ./node_modules/isotropic-dev-dependencies/config/c8.json node --test"
     },
     "type": "module",
     "version": "0.4.0"
