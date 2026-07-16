@@ -1,42 +1,39 @@
-# bunyan-stream-isotropic
+# isotropic-logger-pretty
 
-[![npm version](https://img.shields.io/npm/v/bunyan-stream-isotropic.svg)](https://www.npmjs.com/package/bunyan-stream-isotropic)
-[![License](https://img.shields.io/npm/l/bunyan-stream-isotropic.svg)](https://github.com/ibi-group/bunyan-stream-isotropic/blob/main/LICENSE)
+[![npm version](https://img.shields.io/npm/v/isotropic-logger-pretty.svg)](https://www.npmjs.com/package/isotropic-logger-pretty)
+[![License](https://img.shields.io/npm/l/isotropic-logger-pretty.svg)](https://github.com/ibi-group/isotropic-logger-pretty/blob/main/LICENSE)
 ![](https://img.shields.io/badge/tests-passing-brightgreen.svg)
 ![](https://img.shields.io/badge/coverage-100%25-brightgreen.svg)
 
-A Bunyan stream that produces formatted, human-readable console output with timestamps, colored log levels, and structured data.
+Human-readable pretty-printer for [isotropic-logger](https://github.com/ibi-group/isotropic-logger). It turns the logger's JSON records into formatted, colorized console output with timestamps, colored log levels, and structured data, ideal for command-line tools and local development.
+
+> This package was previously published as `bunyan-stream-isotropic`. It has been rebuilt for the pino-based isotropic-logger and renamed; `bunyan-stream-isotropic` is deprecated.
 
 ## Why Use This?
 
-- **Human-Readable Logs**: Transforms Bunyan's JSON logs into formatted console output that's easy to read
-- **Colored Output**: Uses chalk to color-code log levels for better visibility (trace, debug, info, warn, error, fatal)
-- **Timestamp Formatting**: Displays timestamps in a human-friendly format
-- **Structured Data**: Preserves and displays additional data fields in a readable format
-- **Error Details**: Special handling for error objects with stack traces
-- **Direct Integration**: Works seamlessly with isotropic-logger
+- **One-Call Setup**: A single assignment switches the shared logger to human-readable output.
+- **Readable Logs**: Transforms JSON records into formatted console output that's easy to scan.
+- **Colored Output**: Color-codes log levels using Node's built-in `util.styleText`, no third-party color dependency.
+- **Timestamp Formatting**: Displays timestamps in a friendly `YYYY-MM-DD hh:mm:ss.SSS A` format using the Temporal API.
+- **Structured Data**: Renders additional data fields with `isotropic-value-to-source`.
+- **Error Details**: Special handling for error objects, including stack traces.
+- **No Truncation**: Built on [isotropic-console](https://github.com/ibi-group/isotropic-console) so deep objects and long stacks are printed in full.
 
 ## Installation
 
 ```bash
-npm install bunyan-stream-isotropic
+npm install isotropic-logger-pretty
 ```
 
 ## Usage
 
-```javascript
-import _Bunyan from 'bunyan';
-import _bunyanStreamIsotropic from 'bunyan-stream-isotropic';
+The simplest way to use this package is to assign `outputStream` once, typically at the entry point of a command-line tool. Because isotropic-logger is a shared singleton, this affects every module that logs through it:
 
-// Create a new logger with the isotropic stream
-const _logger = _Bunyan.createLogger({
-    name: 'myapp',
-    streams: [{
-        level: 'info',
-        stream: _bunyanStreamIsotropic,
-        type: 'raw'
-    }]
-});
+```javascript
+import _logger from 'isotropic-logger';
+import _LoggerPretty from 'isotropic-logger-pretty';
+
+_logger.outputStream = _LoggerPretty();
 
 // Basic logging
 _logger.info('Application started');
@@ -49,9 +46,12 @@ _logger.info({
 }, 'User logged in');
 
 // Logging errors
+import _Error from 'isotropic-error';
+
 try {
-    // Some code that might throw
-    throw new Error('Something went wrong');
+    throw _Error({
+        message: 'Something went wrong'
+    });
 } catch (error) {
     _logger.error({
         error
@@ -59,29 +59,9 @@ try {
 }
 ```
 
-## Integration with isotropic-logger
-
-The `bunyan-stream-isotropic` module is designed to work seamlessly with `isotropic-logger`:
-
-```javascript
-import _bunyanStreamIsotropic from 'bunyan-stream-isotropic';
-import _logger from 'isotropic-logger';
-
-// Replace the default streams with the isotropic stream
-_logger.streams = [];
-_logger.addStream({
-    level: 'info',
-    stream: _bunyanStreamIsotropic,
-    type: 'raw'
-});
-
-// Now logs will use the formatted output
-_logger.info('This message will be formatted for human readability');
-```
-
 ## Output Format
 
-The stream produces log entries with the following format:
+The formatter produces log entries with the following shape:
 
 ```
 [YYYY-MM-DD hh:mm:ss.SSS A] LEVEL: Message {additional data}
@@ -90,24 +70,23 @@ The stream produces log entries with the following format:
 For example:
 
 ```
-[2023-06-15 02:37:42.123 PM] INFO: User logged in {
+[2026-06-15 02:37:42.123 PM] INFO: User logged in {
     action: 'login',
     status: 'success',
     user: 'john'
 }
 ```
 
-Errors will also display their stack traces:
+Errors also display their stack traces on the following lines:
 
 ```
-[2023-06-15 02:38:15.456 PM] ERROR: Operation failed {
+[2026-06-15 02:38:15.456 PM] ERROR: Operation failed {
     error: {
         message: 'Something went wrong'
     }
 }
 Error: Something went wrong
     at Object.<anonymous> (/app/example.js:10:11)
-    at Module._compile (internal/modules/cjs/loader.js:1085:14)
     ...
 ```
 
@@ -120,34 +99,20 @@ Each log level is displayed with a different color for better visibility:
 - `INFO`: Cyan
 - `WARN`: Magenta
 - `ERROR`: Red
-- `FATAL`: Inverse (white background, black text)
+- `FATAL`: Inverse (reversed foreground and background)
 
-Custom log levels will be displayed in bold with their level number.
+Custom (unrecognized) log levels are displayed in bold as `LVL <number>`.
 
-## Features
+## Data Field Serialization
 
-### Timestamped Logs
-
-All logs include a timestamp in the format `YYYY-MM-DD hh:mm:ss.SSS A` (e.g., `2023-06-15 02:37:42.123 PM`).
-
-### Formatted Error Handling
-
-The stream provides special handling for error objects:
-
-- Displays error message, code, name, and signal if available
-- Properly formats error stack traces
-- Includes additional error details
-
-### Data Field Serialization
-
-Additional data fields are formatted using `isotropic-value-to-source` for consistent, readable output:
+Additional data fields are formatted with `isotropic-value-to-source` for consistent, readable output:
 
 ```javascript
 _logger.info({
     request: {
+        duration: 123,
         method: 'POST',
-        path: '/api/users',
-        duration: 123
+        path: '/api/users'
     },
     response: {
         status: 201
@@ -158,7 +123,7 @@ _logger.info({
 Output:
 
 ```
-[2023-06-15 02:40:23.789 PM] INFO: API request processed {
+[2026-06-15 02:40:23.789 PM] INFO: API request processed {
     request: {
         duration: 123,
         method: 'POST',
@@ -170,40 +135,18 @@ Output:
 }
 ```
 
-## Configuration
+## Migrating from bunyan-stream-isotropic
 
-The stream doesn't require configuration but works with Bunyan's built-in configuration options:
+This package replaces `bunyan-stream-isotropic`. The visible output is the same, but it is wired up differently because isotropic-logger is now based on pino rather than Bunyan:
 
-```javascript
-// Use with a specific log level
-_logger.addStream({
-    level: 'info', // Only show info and above
-    stream: _bunyanStreamIsotropic,
-    type: 'raw'
-});
-
-// Multiple streams with different levels
-_logger.addStream({
-    level: 'error',
-    stream: _bunyanStreamIsotropic,
-    type: 'raw'
-});
-
-_logger.addStream({
-    level: 'info',
-    stream: process.stdout
-});
-```
-
-## Compatibility
-
-- Works with Node.js v14 and above
-- Compatible with all Bunyan versions
+- **Enable with one assignment.** Instead of clearing `logger.streams` and calling `logger.addStream({ type: 'raw', stream })`, assign to `_logger.outputStream`.
+- **No color dependency.** Coloring now uses Node's built-in `util.styleText` instead of chalk.
+- **Temporal timestamps.** Timestamps are derived with the Temporal API instead of moment-timezone, with the same `YYYY-MM-DD hh:mm:ss.SSS A` format.
 
 ## Contributing
 
-Please refer to [CONTRIBUTING.md](https://github.com/ibi-group/bunyan-stream-isotropic/blob/main/CONTRIBUTING.md) for contribution guidelines.
+Please refer to [CONTRIBUTING.md](https://github.com/ibi-group/isotropic-logger-pretty/blob/main/CONTRIBUTING.md) for contribution guidelines.
 
 ## Issues
 
-If you encounter any issues, please file them at https://github.com/ibi-group/bunyan-stream-isotropic/issues
+If you encounter any issues, please file them at https://github.com/ibi-group/isotropic-logger-pretty/issues
